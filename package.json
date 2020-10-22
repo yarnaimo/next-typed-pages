@@ -1,7 +1,7 @@
 {
-  "name": "next-typed-router",
+  "name": "next-typed-path",
   "version": "0.0.1",
-  "repository": "github:yarnaimo/next-typed-router",
+  "repository": "github:yarnaimo/next-typed-path",
   "license": "MIT",
   "author": "yamaimo <yarnaimo@gmail.com>",
   "main": "dist/index.js",
