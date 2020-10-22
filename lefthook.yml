@@ -1,0 +1,12 @@
+pre-commit:
+  parallel: true
+  commands:
+    package-json:
+      glob: 'package.json'
+      run: yarn sort-package-json {staged_files} && git add {staged_files}
+    js:
+      glob: '*.{js,jsx,ts,tsx}'
+      run: yarn prettier --write {staged_files} && yarn eslint {staged_files} && git add {staged_files}
+    others:
+      glob: '*.{json,css,scss,md}'
+      run: yarn prettier --write {staged_files} && git add {staged_files}
