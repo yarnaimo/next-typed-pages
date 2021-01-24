@@ -2,6 +2,7 @@ import { $dynamic, $route, createRoutes } from '..'
 
 describe('createRoutes', () => {
   const routes = createRoutes({
+    index: $route,
     about: $route,
     users: {
       index: $route,
@@ -21,6 +22,7 @@ describe('createRoutes', () => {
   })
 
   test.each([
+    [routes.index, '/'],
     [routes.about, '/about'],
     [routes.users.index, '/users'],
     [routes.users('123').index, '/users/123'],

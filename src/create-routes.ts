@@ -12,7 +12,7 @@ const mapRouteValue = <R extends typeof $route | RouteOptions>(
   route: R,
 ): MappedRouteValue<R> => {
   return (route === $route
-    ? path
+    ? path || '/'
     : mapRouteOptions(path, route as RouteOptions)) as MappedRouteValue<R>
 }
 
