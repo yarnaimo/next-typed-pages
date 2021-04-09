@@ -1,11 +1,12 @@
-import { $dynamic, $route } from './symbols'
+import { $route } from './symbols'
+
+export type DynamicRouteKey = `[${string}]`
+export type ExtractDynamicRouteKey<T> = Extract<keyof T, DynamicRouteKey>
 
 export type RouteValue = typeof $route | RouteOptions
 
 export type RouteOptions = {
   [K in string]: RouteValue
-} & {
-  [$dynamic]?: RouteValue
 }
 
 export type MappedRouteValue<
@@ -17,8 +18,10 @@ export type MappedRouteValue<
   : never
 
 export type MappedRouteOptions<T extends RouteOptions> = {
-  [K in Extract<keyof T, string>]: MappedRouteValue<T[K]>
+  [K in keyof T as K extends DynamicRouteKey ? never : K]: MappedRouteValue<
+    T[K]
+  >
 } &
-  (T[typeof $dynamic] extends RouteValue
-    ? (path: string) => MappedRouteValue<T[typeof $dynamic]>
-    : {})
+  (ExtractDynamicRouteKey<T> extends never
+    ? {}
+    : (path: string | null) => MappedRouteValue<T[ExtractDynamicRouteKey<T>]>)

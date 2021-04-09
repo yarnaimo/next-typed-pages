@@ -1,11 +1,6 @@
-import { $dynamic, $route } from './symbols'
-import {
-  MappedRouteOptions,
-  MappedRouteValue,
-  RouteOptions,
-  RouteValue,
-} from './types'
-import { joinPath } from './utils'
+import { $route } from './symbols'
+import { MappedRouteOptions, MappedRouteValue, RouteOptions } from './types'
+import { isDynamicRouteKey, joinPath } from './utils'
 
 const mapRouteValue = <R extends typeof $route | RouteOptions>(
   path: string,
@@ -20,16 +15,23 @@ const mapRouteOptions = <T extends RouteOptions>(
   prevPath: string,
   options: T,
 ): MappedRouteOptions<T> => {
-  const dynamicRoute = options[$dynamic as any] as RouteValue | undefined
+  const optionEntries = Object.entries(options)
+
+  const [dynamicRoutePath, dynamicRoute] =
+    optionEntries.find(([key]) => isDynamicRouteKey(key)) ?? []
 
   const dynamicRouteFunction = dynamicRoute
-    ? (path: string) => mapRouteValue(joinPath(prevPath, path), dynamicRoute)
+    ? (key: string | null) =>
+        mapRouteValue(
+          joinPath(prevPath, key ?? dynamicRoutePath!),
+          dynamicRoute,
+        )
     : {}
 
   const mappedOptions = Object.fromEntries(
-    Object.entries(options).map(
-      ([path, route]) =>
-        [path, mapRouteValue(joinPath(prevPath, path), route)] as const,
+    optionEntries.map(
+      ([key, route]) =>
+        [key, mapRouteValue(joinPath(prevPath, key), route)] as const,
     ),
   )
 
