@@ -2,6 +2,7 @@
   "extends": "@sindresorhus/tsconfig",
   "compilerOptions": {
     "target": "es2018",
+    "module": "commonjs",
     "esModuleInterop": true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
