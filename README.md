@@ -19,10 +19,10 @@ const routes = createRoutes({
   about: $route,
   users: {
     index: $route,
-    [$dynamic]: {
+    '[userId]': {
       index: $route,
       posts: {
-        [$dynamic]: {
+        '[postId]': {
           index: $route,
         },
       },
@@ -34,15 +34,17 @@ const routes = createRoutes({
   },
 })
 
+routes.index // => '/'
 routes.about // => '/about'
 routes.users.index // => '/users'
+routes.users(null).index // => '/users/[userId]'
 routes.users('123').index // => '/users/123'
 routes.users('123').posts('456').index // => '/users/123/posts/456'
 routes.users('123').settings.index // => '/users/123/settings'
 routes.users('123').settings.lang // => '/users/123/settings/lang'
 ```
 
-### example
+### Example
 
 ```tsx
 export default () => {
