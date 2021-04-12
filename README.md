@@ -13,7 +13,7 @@ npm i -S next-typed-path
 ## Usage
 
 ```ts
-import { $dynamic, $route, createRoutes } from 'next-typed-path'
+import { $route, createRoutes } from 'next-typed-path'
 
 const routes = createRoutes({
   about: $route,
