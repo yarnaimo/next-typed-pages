@@ -1,4 +1,8 @@
-import { $route } from './symbols'
+import { $index, $route } from './symbols'
+
+export type JoinPath<T extends string, U extends string> = U extends 'index'
+  ? T
+  : `${T}/${U}`
 
 export type DynamicRouteKey = `[${string}]`
 export type ExtractDynamicRouteKey<T> = Extract<keyof T, DynamicRouteKey>
@@ -10,18 +14,35 @@ export type RouteOptions = {
 }
 
 export type MappedRouteValue<
-  R extends typeof $route | RouteOptions
+  R extends typeof $route | RouteOptions,
+  K extends string
 > = R extends typeof $route
-  ? string
+  ? K extends ''
+    ? '/'
+    : K
   : R extends RouteOptions
-  ? MappedRouteOptions<R>
+  ? MappedRouteOptions<R, K>
   : never
 
-export type MappedRouteOptions<T extends RouteOptions> = {
-  [K in keyof T as K extends DynamicRouteKey ? never : K]: MappedRouteValue<
-    T[K]
-  >
-} &
+export type HasIndexSymbol = {
+  [$index]: string
+}
+
+export type MappedRouteOptions<
+  T extends RouteOptions,
+  Prev extends string
+> = HasIndexSymbol &
+  {
+    [K in keyof T as K extends DynamicRouteKey ? never : K]: MappedRouteValue<
+      T[K],
+      JoinPath<Prev, K & string>
+    >
+  } &
   (ExtractDynamicRouteKey<T> extends never
     ? {}
-    : (path: string | null) => MappedRouteValue<T[ExtractDynamicRouteKey<T>]>)
+    : <K extends string | null>(
+        path: K,
+      ) => MappedRouteValue<
+        T[ExtractDynamicRouteKey<T>],
+        JoinPath<Prev, K extends string ? K : ExtractDynamicRouteKey<T>>
+      >)

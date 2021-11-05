@@ -1,20 +1,25 @@
-import { $route } from './symbols'
-import { MappedRouteOptions, MappedRouteValue, RouteOptions } from './types'
+import { $index, $route } from './symbols'
+import {
+  HasIndexSymbol,
+  MappedRouteOptions,
+  MappedRouteValue,
+  RouteOptions,
+} from './types'
 import { isDynamicRouteKey, joinPath } from './utils'
 
 const mapRouteValue = <R extends typeof $route | RouteOptions>(
   path: string,
   route: R,
-): MappedRouteValue<R> => {
+): MappedRouteValue<R, any> => {
   return (route === $route
     ? path || '/'
-    : mapRouteOptions(path, route as RouteOptions)) as MappedRouteValue<R>
+    : mapRouteOptions(path, route as RouteOptions)) as MappedRouteValue<R, any>
 }
 
 const mapRouteOptions = <T extends RouteOptions>(
   prevPath: string,
   options: T,
-): MappedRouteOptions<T> => {
+): MappedRouteOptions<T, any> => {
   const optionEntries = Object.entries(options)
 
   const [dynamicRoutePath, dynamicRoute] =
@@ -35,12 +40,16 @@ const mapRouteOptions = <T extends RouteOptions>(
     ),
   )
 
-  return Object.assign(
-    dynamicRouteFunction,
-    mappedOptions,
-  ) as MappedRouteOptions<T>
+  return Object.assign(dynamicRouteFunction, mappedOptions, {
+    [$index]: prevPath,
+  }) as MappedRouteOptions<T, any>
 }
 
 export const createRoutes = <T extends RouteOptions>(
   options: T,
-): MappedRouteOptions<T> => mapRouteOptions('', options)
+): MappedRouteOptions<T, ''> => mapRouteOptions('', options)
+
+export const isSubpathOf = (pathname: string, routeOptions: HasIndexSymbol) => {
+  const directoryPath = routeOptions[$index]
+  return pathname === directoryPath || pathname.startsWith(directoryPath + '/')
+}
