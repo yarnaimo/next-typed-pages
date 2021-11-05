@@ -5,6 +5,7 @@
   "license": "MIT",
   "author": "yamaimo <yarnaimo@gmail.com>",
   "main": "dist/index.js",
+  "bin": "dist/bin/main.js",
   "scripts": {
     "build": "tsc",
     "debug": "node --inspect -r ts-node/register",
@@ -15,7 +16,9 @@
     "test": "NODE_ENV=test jest",
     "ts-node": "ts-node"
   },
-  "dependencies": {},
+  "dependencies": {
+    "getopts": "^2.3.0"
+  },
   "devDependencies": {
     "@arkweid/lefthook": "^0.7.2",
     "@sindresorhus/tsconfig": "^1.0.1",

@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`generate 1`] = `
+"import { $route, createRoutes } from 'next-typed-path'
+
+export default routes
+
+export const routes = createRoutes({
+  about: $route,
+  index: $route,
+  users: {
+    '[userId]': {
+      index: $route,
+      posts: {
+        '[postId]': $route,
+      },
+    },
+    index: $route,
+  },
+})
+"
+`;
