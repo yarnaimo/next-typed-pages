@@ -24,14 +24,14 @@ export type MappedRouteValue<
   ? MappedRouteOptions<R, K>
   : never
 
-export type HasIndexSymbol = {
-  [$index]: string
+export type HasIndexSymbol<K extends string> = {
+  [$index]: K
 }
 
 export type MappedRouteOptions<
   T extends RouteOptions,
   Prev extends string
-> = HasIndexSymbol &
+> = HasIndexSymbol<Prev> &
   {
     [K in keyof T as K extends DynamicRouteKey ? never : K]: MappedRouteValue<
       T[K],

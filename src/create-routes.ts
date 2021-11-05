@@ -49,7 +49,10 @@ export const createRoutes = <T extends RouteOptions>(
   options: T,
 ): MappedRouteOptions<T, ''> => mapRouteOptions('', options)
 
-export const isSubpathOf = (pathname: string, routeOptions: HasIndexSymbol) => {
+export const isSubpathOf = (
+  pathname: string,
+  routeOptions: HasIndexSymbol<string>,
+) => {
   const directoryPath = routeOptions[$index]
   return pathname === directoryPath || pathname.startsWith(directoryPath + '/')
 }
