@@ -5,8 +5,9 @@ const help = `
 Usage:
 
 next-typed-path generate <output-path>   Generate routes
-  --dir, -d    Path to pages directory (default: src/pages)
-  --name, -n   Variable name of exported routes object (default: routes)
+  --dir, -d         Path to pages directory (default: src/pages)
+  --name, -n        Variable name of exported routes object (default: routes)
+  --defaultExport   Default export routes object (default: false)
 `.trim()
 
 export const cli = async () => {
@@ -14,8 +15,10 @@ export const cli = async () => {
     _: [command, ...args],
     dir,
     name,
+    defaultExport,
   } = getopts(process.argv.slice(2), {
     alias: { dir: 'd', name: 'n' },
+    boolean: ['defaultExport'],
     default: { dir: 'src/pages', name: 'routes' },
   })
 
@@ -25,7 +28,7 @@ export const cli = async () => {
         console.error('Output path must be specified')
         process.exit(1)
       }
-      void generate({ output: args[0], dir, name })
+      void generate({ output: args[0], dir, name, defaultExport })
       break
 
     case '--help':

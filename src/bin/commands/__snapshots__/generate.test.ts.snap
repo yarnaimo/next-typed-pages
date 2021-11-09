@@ -3,7 +3,24 @@
 exports[`generate 1`] = `
 "import { $route, createRoutes } from 'next-typed-path'
 
-export default routes
+export const routes = createRoutes({
+  about: $route,
+  index: $route,
+  users: {
+    '[userId]': {
+      index: $route,
+      posts: {
+        '[postId]': $route,
+      },
+    },
+    index: $route,
+  },
+})
+"
+`;
+
+exports[`generate 2`] = `
+"import { $route, createRoutes } from 'next-typed-path'
 
 export const routes = createRoutes({
   about: $route,
@@ -18,5 +35,7 @@ export const routes = createRoutes({
     index: $route,
   },
 })
+
+export default routes
 "
 `;

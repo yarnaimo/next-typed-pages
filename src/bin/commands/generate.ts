@@ -22,24 +22,27 @@ type Options = {
   dir: string
   name: string
   output: string
+  defaultExport: boolean
 }
 
 export const buildGeneratedRoutesContent = async ({
   dir,
   name,
   output,
+  defaultExport,
 }: Options) => {
   const routesObj = JSON.stringify(buildRoutesObj(dir), undefined, 2).replace(
     /"\$route"/g,
     '$route',
   )
 
-  const content = `import { $route, createRoutes } from 'next-typed-path'
-
-export default ${name}
-
-export const ${name} = createRoutes(${routesObj})
-`
+  const content = [
+    `import { $route, createRoutes } from 'next-typed-path'`,
+    `export const ${name} = createRoutes(${routesObj})`,
+    defaultExport ? `export default ${name}` : undefined,
+  ]
+    .filter((line) => line)
+    .join('\n\n')
 
   const prettier = await import('prettier').catch(() => undefined)
   if (!prettier) {
@@ -54,8 +57,18 @@ export const ${name} = createRoutes(${routesObj})
   return formattedContent
 }
 
-export const generate = async ({ dir, name, output }: Options) => {
-  const content = await buildGeneratedRoutesContent({ dir, name, output })
+export const generate = async ({
+  dir,
+  name,
+  output,
+  defaultExport,
+}: Options) => {
+  const content = await buildGeneratedRoutesContent({
+    dir,
+    name,
+    output,
+    defaultExport,
+  })
 
   writeFileSync(output, content)
   console.log(`🎉 Generated ${output}`)
