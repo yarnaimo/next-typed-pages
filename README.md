@@ -1,21 +1,46 @@
-# next-typed-path
+# next-typed-pages
 
 > Type safe path utility for Next.js
 
 ## Install
 
 ```sh
-yarn add next-typed-path
+yarn add next-typed-pages
 # or
-npm i -S next-typed-path
+npm i -S next-typed-pages
 ```
 
-## Usage
+## Example
+
+1. Files in `pages` directory
+
+```
+- pages/
+  - about.tsx
+  - users/
+    - index.tsx
+    - [userId]/
+      - index.tsx
+      - posts/
+        - [postId]/
+          - index.tsx
+      - settings
+        - index.tsx
+        - lang.tsx
+```
+
+2. Execute command
+
+```sh
+next-typed-pages generate src/next-pages.ts
+```
+
+3. Generated file content (src/next-pages.ts)
 
 ```ts
-import { $route, createRoutes } from 'next-typed-path'
+import { $route, nextPages } from 'next-typed-pages'
 
-const routes = createRoutes({
+export const pages = nextPages({
   about: $route,
   users: {
     index: $route,
@@ -33,26 +58,23 @@ const routes = createRoutes({
     },
   },
 })
-
-routes.index // => '/'
-routes.about // => '/about'
-routes.users.index // => '/users'
-routes.users(null).index // => '/users/[userId]'
-routes.users('123').index // => '/users/123'
-routes.users('123').posts('456').index // => '/users/123/posts/456'
-routes.users('123').settings.index // => '/users/123/settings'
-routes.users('123').settings.lang // => '/users/123/settings/lang'
 ```
 
-### Example
+4. Generate route paths type-safely
 
-```tsx
-export default () => {
-  return <Link href={routes.about}>About</Link>
-}
-
-export default () => {
-  const router = useRouter()
-  return <div onClick={() => router.push(routes.about)}>About</div>
-}
+```ts
+pages.index // => '/'
+pages.about // => '/about'
+pages.users.index // => '/users'
+pages.users(null).index // => '/users/[userId]'
+pages.users('123').index // => '/users/123'
+pages.users('123').posts('456').index // => '/users/123/posts/456'
+pages.users('123').settings.index // => '/users/123/settings'
+pages.users('123').settings.lang // => '/users/123/settings/lang'
 ```
+
+## CLI Options
+
+- `--dir`, `-d` : Path to pages directory (default: src/pages)
+- `--name`, `-n` : Variable name of exported \`pages\` object (default: pages)
+- `--defaultExport` : Default export pages object (default: false)

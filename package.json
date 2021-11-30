@@ -1,7 +1,7 @@
 {
-  "name": "next-typed-path",
+  "name": "next-typed-pages",
   "version": "0.2.2",
-  "repository": "github:yarnaimo/next-typed-path",
+  "repository": "github:yarnaimo/next-typed-pages",
   "license": "MIT",
   "author": "yamaimo <yarnaimo@gmail.com>",
   "main": "dist/index.js",

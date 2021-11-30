@@ -1,9 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`generate 1`] = `
-"import { $route, createRoutes } from 'next-typed-path'
+"import { $route, nextPages } from 'next-typed-pages'
 
-export const routes = createRoutes({
+export const pages = nextPages({
   about: $route,
   index: $route,
   users: {
@@ -20,9 +20,9 @@ export const routes = createRoutes({
 `;
 
 exports[`generate 2`] = `
-"import { $route, createRoutes } from 'next-typed-path'
+"import { $route, nextPages } from 'next-typed-pages'
 
-export const routes = createRoutes({
+export const pages = nextPages({
   about: $route,
   index: $route,
   users: {
@@ -36,6 +36,6 @@ export const routes = createRoutes({
   },
 })
 
-export default routes
+export default pages
 "
 `;

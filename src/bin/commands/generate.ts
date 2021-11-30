@@ -1,7 +1,10 @@
 import { readdirSync, writeFileSync } from 'fs'
 import { join } from 'path'
+import { nextPages } from '../../nextPages'
 
-const buildRoutesObj = (dir: string): object => {
+const packageName = 'next-typed-pages'
+
+const buildPagesObj = (dir: string): object => {
   return Object.fromEntries(
     readdirSync(dir, { withFileTypes: true })
       .map((dirent): [string, string | object] | undefined => {
@@ -10,7 +13,7 @@ const buildRoutesObj = (dir: string): object => {
           return m?.[1] ? [m[1], '$route'] : undefined
         }
         if (dirent.isDirectory()) {
-          return [dirent.name, buildRoutesObj(join(dir, dirent.name))]
+          return [dirent.name, buildPagesObj(join(dir, dirent.name))]
         }
         return undefined
       })
@@ -31,14 +34,14 @@ export const buildGeneratedRoutesContent = async ({
   output,
   defaultExport,
 }: Options) => {
-  const routesObj = JSON.stringify(buildRoutesObj(dir), undefined, 2).replace(
+  const pagesObj = JSON.stringify(buildPagesObj(dir), undefined, 2).replace(
     /"\$route"/g,
     '$route',
   )
 
   const content = [
-    `import { $route, createRoutes } from 'next-typed-path'`,
-    `export const ${name} = createRoutes(${routesObj})`,
+    `import { $route, ${nextPages.name} } from '${packageName}'`,
+    `export const ${name} = ${nextPages.name}(${pagesObj})`,
     defaultExport ? `export default ${name}` : undefined,
   ]
     .filter((line) => line)

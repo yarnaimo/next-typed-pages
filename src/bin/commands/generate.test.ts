@@ -4,8 +4,8 @@ test('generate', async () => {
   expect(
     await buildGeneratedRoutesContent({
       dir: 'src/pages',
-      name: 'routes',
-      output: 'src/__routes.ts',
+      name: 'pages',
+      output: 'src/__pages.ts',
       defaultExport: false,
     }),
   ).toMatchSnapshot()
@@ -13,8 +13,8 @@ test('generate', async () => {
   expect(
     await buildGeneratedRoutesContent({
       dir: 'src/pages',
-      name: 'routes',
-      output: 'src/__routes.ts',
+      name: 'pages',
+      output: 'src/__pages.ts',
       defaultExport: true,
     }),
   ).toMatchSnapshot()

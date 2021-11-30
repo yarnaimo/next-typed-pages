@@ -4,10 +4,10 @@ import { generate } from './commands/generate'
 const help = `
 Usage:
 
-next-typed-path generate <output-path>   Generate routes
+next-typed-pages generate <output-path>   Generate pages file
   --dir, -d         Path to pages directory (default: src/pages)
-  --name, -n        Variable name of exported routes object (default: routes)
-  --defaultExport   Default export routes object (default: false)
+  --name, -n        Variable name of exported \`pages\` object (default: pages)
+  --defaultExport   Default export pages object (default: false)
 `.trim()
 
 export const cli = async () => {
@@ -19,7 +19,7 @@ export const cli = async () => {
   } = getopts(process.argv.slice(2), {
     alias: { dir: 'd', name: 'n' },
     boolean: ['defaultExport'],
-    default: { dir: 'src/pages', name: 'routes' },
+    default: { dir: 'src/pages', name: 'pages' },
   })
 
   switch (command) {

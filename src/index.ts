@@ -1,3 +1,3 @@
-export * from './create-routes'
+export * from './nextPages'
 export * from './symbols'
 export * from './types'

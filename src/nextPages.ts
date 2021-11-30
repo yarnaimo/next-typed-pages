@@ -45,7 +45,7 @@ const mapRouteOptions = <T extends RouteOptions>(
   }) as MappedRouteOptions<T, any>
 }
 
-export const createRoutes = <T extends RouteOptions>(
+export const nextPages = <T extends RouteOptions>(
   options: T,
 ): MappedRouteOptions<T, ''> => mapRouteOptions('', options)
 
