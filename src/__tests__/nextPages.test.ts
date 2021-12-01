@@ -2,7 +2,7 @@ import { $route, nextPages } from '..'
 import { isSubpathOf } from '..'
 import { $index } from '../symbols'
 
-const pages = nextPages({
+const { pages, usePagesRouter } = nextPages({
   index: $route,
   about: $route,
   users: {
@@ -62,3 +62,13 @@ describe('isSubpathOf', () => {
     expect(isSubpathOf(pathname, routeOptions)).toBe(expected),
   )
 })
+
+test('usePagesRouter', () => {
+  type Query = ReturnType<typeof usePagesRouter>['query']
+
+  expectType<{ userId?: string; postId?: string }>({} as Query)
+  // @ts-expect-error wrong key
+  expectType<{ user?: string; post?: string }>({} as Query)
+})
+
+import { expectType } from 'tsd'

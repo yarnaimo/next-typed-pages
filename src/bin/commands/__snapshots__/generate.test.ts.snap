@@ -3,7 +3,7 @@
 exports[`generate 1`] = `
 "import { $route, nextPages } from 'next-typed-pages'
 
-export const pages = nextPages({
+export const { pages, usePagesRouter } = nextPages({
   about: $route,
   index: $route,
   users: {
@@ -16,26 +16,5 @@ export const pages = nextPages({
     index: $route,
   },
 })
-"
-`;
-
-exports[`generate 2`] = `
-"import { $route, nextPages } from 'next-typed-pages'
-
-export const pages = nextPages({
-  about: $route,
-  index: $route,
-  users: {
-    '[userId]': {
-      index: $route,
-      posts: {
-        '[postId]': $route,
-      },
-    },
-    index: $route,
-  },
-})
-
-export default pages
 "
 `;

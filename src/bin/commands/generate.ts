@@ -23,17 +23,10 @@ const buildPagesObj = (dir: string): object => {
 
 type Options = {
   dir: string
-  name: string
   output: string
-  defaultExport: boolean
 }
 
-export const buildGeneratedRoutesContent = async ({
-  dir,
-  name,
-  output,
-  defaultExport,
-}: Options) => {
+export const buildGeneratedRoutesContent = async ({ dir, output }: Options) => {
   const pagesObj = JSON.stringify(buildPagesObj(dir), undefined, 2).replace(
     /"\$route"/g,
     '$route',
@@ -41,8 +34,7 @@ export const buildGeneratedRoutesContent = async ({
 
   const content = [
     `import { $route, ${nextPages.name} } from '${packageName}'`,
-    `export const ${name} = ${nextPages.name}(${pagesObj})`,
-    defaultExport ? `export default ${name}` : undefined,
+    `export const { pages, usePagesRouter } = ${nextPages.name}(${pagesObj})`,
   ]
     .filter((line) => line)
     .join('\n\n')
@@ -60,18 +52,8 @@ export const buildGeneratedRoutesContent = async ({
   return formattedContent
 }
 
-export const generate = async ({
-  dir,
-  name,
-  output,
-  defaultExport,
-}: Options) => {
-  const content = await buildGeneratedRoutesContent({
-    dir,
-    name,
-    output,
-    defaultExport,
-  })
+export const generate = async ({ dir, output }: Options) => {
+  const content = await buildGeneratedRoutesContent({ dir, output })
 
   writeFileSync(output, content)
   console.log(`🎉 Generated ${output}`)

@@ -6,20 +6,15 @@ Usage:
 
 next-typed-pages generate <output-path>   Generate pages file
   --dir, -d         Path to pages directory (default: src/pages)
-  --name, -n        Variable name of exported \`pages\` object (default: pages)
-  --defaultExport   Default export pages object (default: false)
 `.trim()
 
 export const cli = async () => {
   const {
     _: [command, ...args],
     dir,
-    name,
-    defaultExport,
   } = getopts(process.argv.slice(2), {
-    alias: { dir: 'd', name: 'n' },
-    boolean: ['defaultExport'],
-    default: { dir: 'src/pages', name: 'pages' },
+    alias: { dir: 'd' },
+    default: { dir: 'src/pages' },
   })
 
   switch (command) {
@@ -28,7 +23,7 @@ export const cli = async () => {
         console.error('Output path must be specified')
         process.exit(1)
       }
-      void generate({ output: args[0], dir, name, defaultExport })
+      void generate({ output: args[0], dir })
       break
 
     case '--help':

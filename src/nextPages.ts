@@ -4,8 +4,11 @@ import {
   MappedRouteOptions,
   MappedRouteValue,
   RouteOptions,
+  UsePagesRouter,
 } from './types'
 import { isDynamicRouteKey, joinPath } from './utils'
+import { NextRouter, useRouter } from 'next/router'
+import { Merge } from 'type-fest'
 
 const mapRouteValue = <R extends typeof $route | RouteOptions>(
   path: string,
@@ -45,9 +48,12 @@ const mapRouteOptions = <T extends RouteOptions>(
   }) as MappedRouteOptions<T, any>
 }
 
-export const nextPages = <T extends RouteOptions>(
-  options: T,
-): MappedRouteOptions<T, ''> => mapRouteOptions('', options)
+export const nextPages = <T extends RouteOptions>(options: T) => {
+  const pages: MappedRouteOptions<T, ''> = mapRouteOptions('', options)
+  const usePagesRouter = () => useRouter() as UsePagesRouter<T>
+
+  return { pages, usePagesRouter }
+}
 
 export const isSubpathOf = (
   pathname: string,

@@ -10,18 +10,7 @@ const config = {
     'no-restricted-imports': [
       'error',
       {
-        paths: [
-          'signale',
-          'got',
-          'ky',
-          'ky-universal',
-          'dayjs',
-          'firebase',
-          'remeda',
-          'runtypes',
-          '@sindresorhus/is',
-          'type-fest',
-        ],
+        paths: [],
         patterns: ['**/__mocks__/**'],
       },
     ],

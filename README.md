@@ -76,5 +76,3 @@ pages.users('123').settings.lang // => '/users/123/settings/lang'
 ## CLI Options
 
 - `--dir`, `-d` : Path to pages directory (default: src/pages)
-- `--name`, `-n` : Variable name of exported \`pages\` object (default: pages)
-- `--defaultExport` : Default export pages object (default: false)
