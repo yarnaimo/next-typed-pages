@@ -65,5 +65,11 @@ type ExtractDynamicKeysFromOptions<T, Depth extends number = 10> = [
 
 export type UsePagesRouter<T extends RouteOptions> = Merge<
   NextRouter,
-  { query: { [K in ExtractDynamicKeysFromOptions<T>]?: string } }
+  {
+    query: {
+      [K in ExtractDynamicKeysFromOptions<T>]?: string
+    } & {
+      [key: string]: string
+    }
+  }
 >
