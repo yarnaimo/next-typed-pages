@@ -50,7 +50,7 @@ const mapRouteOptions = <T extends RouteOptions>(
 
 export const nextPages = <T extends RouteOptions>(options: T) => {
   const pages: MappedRouteOptions<T, ''> = mapRouteOptions('', options)
-  const usePagesRouter = () => useRouter() as UsePagesRouter<T>
+  const usePagesRouter = () => (useRouter() as unknown) as UsePagesRouter<T>
 
   return { pages, usePagesRouter }
 }
