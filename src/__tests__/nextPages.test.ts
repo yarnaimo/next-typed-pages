@@ -1,5 +1,5 @@
-import { $route, nextPages } from '..'
-import { isSubpathOf } from '..'
+import { expectType } from 'tsd'
+import { $route, isSubpathOf, nextPages } from '..'
 import { $index } from '../symbols'
 
 const { pages, usePagesRouter } = nextPages({
@@ -10,11 +10,12 @@ const { pages, usePagesRouter } = nextPages({
     '[userId]': {
       index: $route,
       posts: {
-        '[postId]': {
+        '[...postId]': {
           index: $route,
         },
       },
       settings: {
+        '[[...path]]': $route,
         index: $route,
         lang: $route,
       },
@@ -37,17 +38,28 @@ describe(nextPages.name, () => {
     [pages.users('123')[$index], '/users/123'],
     [pages.users('123').index, '/users/123'],
     [pages.users('123').posts('456').index, '/users/123/posts/456'],
-    [pages.users(null).posts(null)[$index], '/users/[userId]/posts/[postId]'],
-    [pages.users(null).posts(null).index, '/users/[userId]/posts/[postId]'],
-    [pages.users('123').posts(null).index, '/users/123/posts/[postId]'],
+    [pages.users('123').posts('456', '789').index, '/users/123/posts/456/789'],
+    [
+      pages.users(null).posts(null)[$index],
+      '/users/[userId]/posts/[...postId]',
+    ],
+    [pages.users(null).posts(null).index, '/users/[userId]/posts/[...postId]'],
+    [pages.users('123').posts(null).index, '/users/123/posts/[...postId]'],
     [pages.users('123').settings.index, '/users/123/settings'],
     [pages.users('123').settings.lang, '/users/123/settings/lang'],
+    [pages.users('123').settings('a', 'b'), '/users/123/settings/a/b'],
+    [pages.users('123').settings(), '/users/123/settings'],
+    [pages.users('123').settings(null), '/users/123/settings/[[...path]]'],
   ])('%p', (actual, expected) => expect<string>(actual).toBe(expected))
 
   // @ts-expect-error: non dynamic route
   void (() => pages.about())
-  // @ts-expect-error: non dynamic route
-  void (() => pages.users('123').settings())
+  // @ts-expect-error: pass 0 segments to dynamic route
+  void (() => pages.users())
+  // @ts-expect-error: pass multiple segments to dynamic route
+  void (() => pages.users('123', '456'))
+  // @ts-expect-error: pass 0 segments to catch all route
+  void (() => pages.users('123').posts().index)
 })
 
 describe('isSubpathOf', () => {
@@ -66,9 +78,9 @@ describe('isSubpathOf', () => {
 test('usePagesRouter', () => {
   type Query = ReturnType<typeof usePagesRouter>['query']
 
-  expectType<{ userId?: string; postId?: string }>({} as Query)
+  expectType<{ userId: string; postId: string[]; path: string[] }>(
+    {} as { [K in keyof Query]-?: Query[K] },
+  )
   // @ts-expect-error wrong key
   expectType<{ user?: string; post?: string }>({} as Query)
 })
-
-import { expectType } from 'tsd'

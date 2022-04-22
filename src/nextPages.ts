@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router'
 import { $index, $route } from './symbols'
 import {
   HasIndexSymbol,
@@ -7,8 +8,6 @@ import {
   UsePagesRouter,
 } from './types'
 import { isDynamicRouteKey, joinPath } from './utils'
-import { NextRouter, useRouter } from 'next/router'
-import { Merge } from 'type-fest'
 
 const mapRouteValue = <R extends typeof $route | RouteOptions>(
   path: string,
@@ -29,9 +28,12 @@ const mapRouteOptions = <T extends RouteOptions>(
     optionEntries.find(([key]) => isDynamicRouteKey(key)) ?? []
 
   const dynamicRouteFunction = dynamicRoute
-    ? (key: string | null) =>
+    ? (...key: string[] | [null]) =>
         mapRouteValue(
-          joinPath(prevPath, key ?? dynamicRoutePath!),
+          joinPath(
+            prevPath,
+            key[0] === null ? [dynamicRoutePath!] : (key as string[]),
+          ),
           dynamicRoute,
         )
     : {}
@@ -39,7 +41,7 @@ const mapRouteOptions = <T extends RouteOptions>(
   const mappedOptions = Object.fromEntries(
     optionEntries.map(
       ([key, route]) =>
-        [key, mapRouteValue(joinPath(prevPath, key), route)] as const,
+        [key, mapRouteValue(joinPath(prevPath, [key]), route)] as const,
     ),
   )
 
@@ -49,7 +51,7 @@ const mapRouteOptions = <T extends RouteOptions>(
 }
 
 export const nextPages = <T extends RouteOptions>(options: T) => {
-  const pages: MappedRouteOptions<T, ''> = mapRouteOptions('', options)
+  const pages: MappedRouteOptions<T, ''> = mapRouteOptions('', options) as any
   const usePagesRouter = () => useRouter() as UsePagesRouter<T>
 
   return { pages, usePagesRouter }
